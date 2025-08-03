@@ -10,7 +10,7 @@ const LoginModal = ({ onClose }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      await axios.post(`https://ecommerce-full-d2a6.onrender.com/api/save-user`, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/save-user`, {
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
