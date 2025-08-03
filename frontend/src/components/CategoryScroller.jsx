@@ -14,12 +14,12 @@ const categories = [
   { name: "Accessories", image: "../images/ps5.webp" },
 ];
 
-// Nhân 3 lần để tạo hiệu ứng vô hạn
-const repeatedCategories = [...categories, ...categories, ...categories, ...categories, ...categories, ...categories, ...categories, ...categories];
+// Nhân nhiều lần để tạo hiệu ứng vô hạn
+const repeatedCategories = Array(10).fill(categories).flat();
 
 const CategoryScroller = () => {
   const scrollRef = useRef(null);
-  const itemWidth = 160; // Ước lượng chiều rộng 1 item
+  const itemWidth = 160;
 
   // Di chuyển trái/phải
   const scroll = (direction) => {
@@ -32,40 +32,39 @@ const CategoryScroller = () => {
     }
   };
 
-  // Set vị trí scroll về giữa khi load
   useEffect(() => {
-    const { current } = scrollRef;
-    if (current) {
-      const middle = (current.scrollWidth / 3);
-      current.scrollLeft = middle;
-    }
-  }, []);
-
-  // Auto scroll + reset khi gần cuối hoặc đầu
-  useEffect(() => {
-    const { current } = scrollRef;
+    const current = scrollRef.current;
     if (!current) return;
 
-    const interval = setInterval(() => {
-      current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+    const middle = current.scrollWidth / 2;
+    let intervalId;
 
-      // Nếu scroll gần cuối => reset về giữa
-      if (current.scrollLeft + current.clientWidth >= current.scrollWidth - itemWidth * 2) {
-        current.scrollLeft = current.scrollWidth / 3;
-      }
+    // Set scroll giữa sau khi DOM render
+    const raf = requestAnimationFrame(() => {
 
-      // Nếu scroll gần đầu => reset về giữa
-      if (current.scrollLeft <= itemWidth * 2) {
-        current.scrollLeft = current.scrollWidth / 3;
-      }
-    }, 2000); // scroll mỗi 2s
+      // Chờ một chút rồi mới auto scroll
+      setTimeout(() => {
+        intervalId = setInterval(() => {
+          current.scrollBy({ left: itemWidth, behavior: 'smooth' });
 
-    return () => clearInterval(interval);
+          // Reset nếu gần cuối hoặc đầu
+          if (
+            current.scrollLeft + current.clientWidth >= current.scrollWidth - itemWidth * 2 ||
+            current.scrollLeft <= itemWidth * 2
+          ) {
+          }
+        }, 2000);
+      }, 500); // Delay để tránh hiệu ứng cuốn nhanh
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
     <div className="relative my-4">
-      {/* Mũi tên trái */}
       <button
         onClick={() => scroll("left")}
         className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition"
@@ -73,7 +72,6 @@ const CategoryScroller = () => {
         <FaChevronLeft />
       </button>
 
-      {/* Danh sách danh mục */}
       <div
         ref={scrollRef}
         className="flex space-x-3 overflow-x-auto px-8 hide-scrollbar scroll-smooth"
@@ -93,7 +91,6 @@ const CategoryScroller = () => {
         ))}
       </div>
 
-      {/* Mũi tên phải */}
       <button
         onClick={() => scroll("right")}
         className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition"
