@@ -11,7 +11,7 @@ const HeroBanner = () => {
           IPHONE 16 PRO MAX
         </span>
         <h1 className="text-4xl font-bold mb-4">
-          Lorems ipsum dolor sit amet consectetur adipisicing elit. Officia sint natus doloribus cupiditate eius doloremque dicta obcaecati molestias autem! Odio soluta suscipit itaque magnam voluptatem vero odit, unde aut distinctio. ipsum dolor sit amet,
+          Lorems ipsum dolor sit amet,
           <br />
           consectetur adipisicing elit.
         </h1>
