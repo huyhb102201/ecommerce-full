@@ -11,6 +11,10 @@ app.use(express.json());
 // Sử dụng route từ file userRoutes
 app.use('/api', userRoutes);
 
+app.get('/', (req, res) => {
+  res.send('Backend Render hoạt động OK!');
+});
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`🚀 Server chạy tại http://localhost:${port}`);
